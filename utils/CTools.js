@@ -8,44 +8,29 @@ const crearHashMd5 = async(str) => {
 
 //De momento se regresa mismo valor... solo dev
 const encryptString = (msg) => {
-    return msg;
-    return CryptoJS.AES.encrypt(msg, token_key).toString();
+    let encToken = token_key + moment().format('DD%MM&YYYY') + new Date().getDay();
+    return CryptoJS.AES.encrypt(msg.toString(), encToken).toString();
 }
 
 const decryptString = async(msg) => {
-    return msg;
-    let bytes = CryptoJS.AES.decrypt(msg, token_key);
+    let encToken = token_key + moment().format('DD%MM&YYYY') + new Date().getDay();
+    let bytes = CryptoJS.AES.decrypt(msg, encToken);
     return bytes.toString(CryptoJS.enc.Utf8);
 }
 
 //TODO encriptar los datos del response
-const encryptObjKey = (objData) => {
+const encryptObjKey = async(objData) => {
     let objKey = Object.keys(objData);
     for (let objDataInfo of objKey) {
-        const lower = objDataInfo.toLowerCase();
-        let objDataCCInfo = objDataInfo.charAt(0).toLowerCase() + objDataInfo.charAt(1).toUpperCase() + lower.slice(2);
-        delete Object.assign(objData, {
-            [objDataCCInfo]: objData[objDataInfo]
-        })[objDataInfo];
+        console.log(objData[objDataInfo]);
+        objData[objDataInfo] = await encryptString(objData[objDataInfo])
     }
     return objData;
-}
 
-//TODO dencriptar los datos del request
-const decryptObjKey = (objData) => {
-    let objKey = Object.keys(objData);
-    for (let objDataInfo of objKey) {
-        const lower = objDataInfo.toLowerCase();
-        let objDataCCInfo = objDataInfo.charAt(0).toLowerCase() + objDataInfo.charAt(1).toUpperCase() + lower.slice(2);
-        delete Object.assign(objData, {
-            [objDataCCInfo]: objData[objDataInfo]
-        })[objDataInfo];
-    }
-    return objData;
 }
 
 module.exports = {
     crearHashMd5,
+    decryptString,
     encryptObjKey,
-    decryptObjKey,
 }
