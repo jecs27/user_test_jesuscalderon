@@ -8,7 +8,11 @@ const {
 const {
     createUserValidator
 } = require('../middleware/validators/userValidators')
+
+const {
+    verifyToken
+} = require('../middleware/auth/auth')
     //falta jwt de validacion app
-router.post('/createUser', createUserValidator, createUser);
+router.post('/createUser', createUserValidator, verifyToken, createUser);
 
 module.exports = router;

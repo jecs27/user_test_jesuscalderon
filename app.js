@@ -29,9 +29,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 let {
-    usersRouter,
+    userRoute,
+    utilsRoute
 } = require("./routes/");
 
-app.use('/users', usersRouter);
+app.use('/users', userRoute);
+app.use('/utils', utilsRoute);
 
 module.exports = app;
