@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 var express = require('express');
 var router = express.Router();
 
@@ -7,3 +8,10 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+=======
+const userRoute = require('./userRoute');
+
+module.exports = {
+    userRoute,
+};
+>>>>>>> Stashed changes

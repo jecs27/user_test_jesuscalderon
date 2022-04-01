@@ -14,7 +14,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+<<<<<<< Updated upstream
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+=======
+let {
+    userRoute,
+} = require("./routes/");
+
+app.use('/users', userRoute);
+>>>>>>> Stashed changes
 
 module.exports = app;
