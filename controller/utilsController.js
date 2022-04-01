@@ -26,8 +26,11 @@ const getTokenApplication = async(req, res) => {
         let {
             sMW
         } = req.body;
-        let idApp = await decryptString(req.header('sMW').split(' ')[1]);
+        
+        let idApp = await decryptString(req.header('sMW')?.split(' ')[1]);
         sMW = await decryptString(sMW);
+
+        console.log(sMW,idApp);
 
         if (sMW == undefined || idApp == undefined || sMW != 'trc-2712' || idApp != 'trc-2712') {
             return res.status(409).send({

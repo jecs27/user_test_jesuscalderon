@@ -22,8 +22,7 @@ const generateToken = (data) => {
 
 const verifyToken = async(req, res, next) => {
     try {
-        //if (req.header('Authorization')?.split(' ')[0] == 'Bearer') {
-        if (req.header('Authorization').split(' ')[0] == 'Bearer') {
+        if (req.header('Authorization')?.split(' ')[0] == 'Bearer') {
             const decoded = jwt.verify(req.header('Authorization').split(' ')[1], config.token_key);
             if (decoded.exp <= moment().unix()) {
                 return res.status(401).send({
