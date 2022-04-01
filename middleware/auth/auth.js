@@ -3,6 +3,11 @@ const config = require('../../config/config');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 
+const {
+    decryptString,
+    crearHashMd5,
+} = require('../../utils/CTools');
+
 const generateToken = (data) => {
     try {
         const token = jwt.sign(data, config.token_key, {
@@ -15,7 +20,7 @@ const generateToken = (data) => {
     }
 }
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async(req, res, next) => {
     try {
         //if (req.header('Authorization')?.split(' ')[0] == 'Bearer') {
         if (req.header('Authorization').split(' ')[0] == 'Bearer') {
@@ -26,13 +31,14 @@ const verifyToken = (req, res, next) => {
                     message: 'Token Expirado.'
                 });
             } else {
-                if (!validaIdentidad(decoded, req.header('sMW'))) {
+                if (await validateInfo(decoded, req.header('sMW'))) {
+                    next();
+                } else {
                     return res.status(403).send({
                         status: 403,
                         message: "Token Inválido, no pudo ser autenticado."
                     });
                 }
-                next();
             }
         } else {
             return res.status(403).send({
@@ -62,22 +68,21 @@ const verifyToken = (req, res, next) => {
     }
 }
 
-const validaIdentidad = (data, sMW) => {
-    if (sMW != undefined && sMW != 'undefined') {
-        console.log(data, sMW);
-        if (decrytData(data.sUd) == decrytData(sMW)) {
-            return true;
+const validateInfo = async(data, sMW) => {
+    console.log(data, sMW);
+    if (sMW != undefined && sMW != 'undefined' && sMW != '') {
+        sMW = await decryptString(sMW);
+        let dataTkn = moment().format('DD.MM.YYYY') + await crearHashMd5("-JECS2712");
+        if (sMW == 'trc-2712' && data.sMW == dataTkn) {
+            return true
         }
+    } else {
+        return false;
     }
-    return false;
 }
 
-const decrytData = (msg) => {
-    let bytes = CryptoJS.AES.decrypt(msg, config.token_key);
-    return bytes.toString(CryptoJS.enc.Utf8);
-}
 
 module.exports = {
     generateToken,
-    verifyToken
+    verifyToken,
 }

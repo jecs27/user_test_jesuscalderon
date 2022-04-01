@@ -5,6 +5,6 @@ const {
     getTokenApplication,
 } = require('../controller/utilsController')
 
-router.post('/test', getTokenApplication);
+router.post('/getAppToken', getTokenApplication);
 
 module.exports = router;

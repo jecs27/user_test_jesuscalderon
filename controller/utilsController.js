@@ -11,7 +11,7 @@ const {
     encryptObjKey,
     decryptString,
     crearHashMd5
-} = require('../utils/CTools')
+} = require('../utils/CTools');
 
 const getTokenApplication = async(req, res) => {
     let err = await errResponse(validationResult(req), res, 'error');
@@ -26,7 +26,9 @@ const getTokenApplication = async(req, res) => {
         let {
             sMW
         } = req.body;
-        let idApp = req.header('sMW').split(' ')[1];
+        let idApp = await decryptString(req.header('sMW').split(' ')[1]);
+        sMW = await decryptString(sMW);
+
         if (sMW == undefined || idApp == undefined || sMW != 'trc-2712' || idApp != 'trc-2712') {
             return res.status(409).send({
                 status: 409,
